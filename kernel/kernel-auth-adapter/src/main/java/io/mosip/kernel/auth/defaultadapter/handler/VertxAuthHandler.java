@@ -11,15 +11,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.annotation.PostConstruct;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 
-import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
-import org.apache.hc.client5.http.impl.classic.HttpClients;
-import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
-import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustStrategy;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
@@ -53,7 +53,6 @@ import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
-import jakarta.annotation.PostConstruct;
 
 @Lazy
 @Component
@@ -76,7 +75,6 @@ public class VertxAuthHandler implements VertxAuthenticationProvider {
 	@PostConstruct
 	void init() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
 		HttpClientBuilder httpClientBuilder = HttpClients.custom().disableCookieManagement();
-		var connnectionManagerBuilder = PoolingHttpClientConnectionManagerBuilder.create();
 		HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
 		if (sslBypass) {
 			TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
@@ -87,9 +85,8 @@ public class VertxAuthHandler implements VertxAuthenticationProvider {
 					return true;
 				}
 			});
-			connnectionManagerBuilder.setSSLSocketFactory(csf);
+			httpClientBuilder.setSSLSocketFactory(csf);
 		}
-		httpClientBuilder.setConnectionManager(connnectionManagerBuilder.build());
 		requestFactory.setHttpClient(httpClientBuilder.build());
 		List<ClientHttpRequestInterceptor> list = new ArrayList<>();
 		list.add(restInterceptor);

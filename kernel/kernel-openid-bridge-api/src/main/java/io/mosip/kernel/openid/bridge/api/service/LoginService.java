@@ -1,8 +1,9 @@
 package io.mosip.kernel.openid.bridge.api.service;
 
 
+import javax.servlet.http.Cookie;
+
 import io.mosip.kernel.openid.bridge.dto.AccessTokenResponseDTO;
-import jakarta.servlet.http.Cookie;
 
 public interface LoginService {
 

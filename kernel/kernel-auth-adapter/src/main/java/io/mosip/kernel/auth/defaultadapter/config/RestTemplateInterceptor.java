@@ -13,7 +13,6 @@ import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.stereotype.Component;
 
 
 /***********************************************************************************************************************
@@ -34,7 +33,6 @@ import org.springframework.stereotype.Component;
  * @since 1.0.0
  **********************************************************************************************************************/
 
-@Component
 public class RestTemplateInterceptor implements ClientHttpRequestInterceptor {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RestTemplateInterceptor.class);
